@@ -4,21 +4,15 @@ import Crypto.Cipher.ECDSA.Util
 import Crypto.Cipher.ECDSA.Math
 
 import qualified Data.ByteString.Lazy as BS
-import Data.Word (Word8)
-import Data.Text.Lazy (Text)
-import Data.Text.Lazy.Read (hexadecimal)
-import Data.Text.Lazy.Encoding (encodeUtf8)
 import System.Random (randomRIO)
-import Data.Functor ((<$>))
 import Data.Maybe (fromMaybe)
-import Control.Monad.State
 
 signz :: CurveParameters
       -> PrivateKey
       -> Integer
       -> IO (Integer, Integer)
 signz cp da z = do
-  k <- randomRIO (1, n - 1)
+  k <- randomRIO (1, n - 1) -- TODO: Use crypto random
   maybe (signz cp da z) return (getRS k)  
   where
     (CurveParameters _ c@(Curve a b fr) g n) = cp
@@ -92,5 +86,3 @@ verify cp hf qa sig m = verifyz cp qa (r, s) z
       bytesToInteger $ BS.take (fromIntegral $ ln `div` 8) sig,
       bytesToInteger $ BS.drop (fromIntegral $ ln `div` 8) sig)      
     (CurveParameters ln _ _ n) = cp
-
-

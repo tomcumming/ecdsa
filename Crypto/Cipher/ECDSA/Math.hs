@@ -76,6 +76,7 @@ pointMul c n p
    
 -- |Check that point satisfies elliptic curve equation
 onCurve :: Curve -> Point -> Bool
+-- onCurve _ Point0 = True    TODO: Is this true?
 onCurve (Curve a b p) (Point x y) = 
   (y ^ 2) `mod` p == (x ^ 3 + a * x + b) `mod` p
 
